@@ -96,7 +96,7 @@ public:
 UnicornWrap::UnicornWrap() : UnicornWrap(UC_ARCH_X86, UC_MODE_32, DefaultMemStart, DefaultMemSize) {
 }
 
-UnicornWrap::UnicornWrap(uc_arch arch, uc_mode mode, uint64_t start, size_t size) : mem_start(start), mem_usage(start), mem_size(size) {
+UnicornWrap::UnicornWrap(uc_arch arch, uc_mode mode, uint64_t start, size_t size) : uc(nullptr), mem_start(start), mem_usage(start), mem_size(size) {
   this->err = uc_open(arch, mode, &this->uc);
   if (this->err != UC_ERR_OK) {
     throw std::runtime_error("ERROR: failed on uc_open(), quit");

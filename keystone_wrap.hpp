@@ -47,7 +47,7 @@ std::string KeystoneWrap::Error() {
 KeystoneWrap::KeystoneWrap() : KeystoneWrap(KS_ARCH_X86, KS_MODE_32) {
 }
 
-KeystoneWrap::KeystoneWrap(ks_arch arch, ks_mode mode) {
+KeystoneWrap::KeystoneWrap(ks_arch arch, ks_mode mode) : ks(nullptr), encode(nullptr) {
   this->err = ks_open(arch, mode, &this->ks);
   if (this->err != KS_ERR_OK) {
     throw std::runtime_error("ERROR: failed on ks_open(), quit");
