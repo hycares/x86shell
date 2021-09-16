@@ -36,7 +36,7 @@ public:
 };
 
 std::string KeystoneWrap::Error() {
-  std::string errmsg("No Error");
+  std::string errmsg("KW: No Error");
   this->err = ks_errno(this->ks);
   if (this->err != KS_ERR_OK) {
     errmsg = std::string(ks_strerror(this->err));
@@ -77,7 +77,7 @@ std::tuple<unsigned char*, size_t, size_t> KeystoneWrap::ASM(const char* code) {
 }
 
 std::tuple<unsigned char*, size_t, size_t> KeystoneWrap::ASM(std::string code) {
-  // std::cout << "ASM: " << code << std::endl;
+  std::cout << "ASM: " << code << std::endl;
   return this->ASM(code.c_str());
 }
 }
