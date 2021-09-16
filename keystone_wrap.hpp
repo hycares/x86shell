@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <tuple>
+#include <stdexcept>
 
 #include <keystone/keystone.h>
 
@@ -49,7 +50,7 @@ KeystoneWrap::KeystoneWrap() : KeystoneWrap(KS_ARCH_X86, KS_MODE_32) {
 KeystoneWrap::KeystoneWrap(ks_arch arch, ks_mode mode) {
   this->err = ks_open(arch, mode, &this->ks);
   if (this->err != KS_ERR_OK) {
-    std::cerr << "ERROR: failed on ks_open(), quit" << std::endl;
+    throw std::runtime_error("ERROR: failed on ks_open(), quit");
   }
 }
 
@@ -76,7 +77,7 @@ std::tuple<unsigned char*, size_t, size_t> KeystoneWrap::ASM(const char* code) {
 }
 
 std::tuple<unsigned char*, size_t, size_t> KeystoneWrap::ASM(std::string code) {
-  std::cout << "ASM: " << code << std::endl;
+  // std::cout << "ASM: " << code << std::endl;
   return this->ASM(code.c_str());
 }
 }
