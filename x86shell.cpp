@@ -91,9 +91,7 @@ int main(int argc, char const *argv[])
 
     auto tp = kw.ASM(input);
     // output(tp);
-    if (uc.Emulate(tp)) {
-      unicorn::prettyDump();
-    } else {
+    if (!uc.Emulate(tp)) {
       std::cout << uc.Error() << std::endl;
     }
   }
