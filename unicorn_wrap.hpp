@@ -10,22 +10,10 @@
 
 #include <unicorn/unicorn.h>
 
-// TODO 
-// 绑定寄存器
-// 设置内存起始位置
-// 设置内存大小
-
 namespace unicorn
 {
 const uint64_t DefaultMemStart = 0x01000000;
 const size_t DefaultMemSize = 1 << 20; // 1MB
-
-const std::array<std::string, 16> REGName{
-  "eax", "eip", "ebx", "eflags",
-  "ecx", " cs", "edx", " ss",
-  "esp", " ds", "ebp", " es",
-  "esi", " fs", "edi", " gs"
-};
 
 const std::map<std::string, uc_x86_reg> x86_REGS {
   {"eax", UC_X86_REG_EAX}, {"ebx", UC_X86_REG_EBX}, {"ecx", UC_X86_REG_ECX}, {"edx", UC_X86_REG_EDX},
