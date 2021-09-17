@@ -45,11 +45,20 @@ std::map<std::string, uint32_t> x86_REGS_value {
   {"es", 0}, {"fs", 0}, {"gs", 0}
 };
 
+const std::map<std::string, int> flagbit {
+  {"CF", 0}, {"PF", 2}, {"AF", 4},
+  {"ZF", 6}, {"IF", 9}, {"DF", 10},
+  {"OF", 11}
+};
+
 #define DUMPREGS(NAME) \
   std::cout << #NAME << ": 0x" << std::setw(8) << std::setfill('0') << std::hex << x86_REGS_value[#NAME] << "\t";
 
 #define DUMPSEGS(NAME) \
   std::cout << #NAME << ": 0x" << std::setw(4) << std::setfill('0') << std::hex << x86_REGS_value[#NAME] << "\t";
+
+#define DUMPFLAGS(FLAG) \
+  std::cout << #FLAG << "(" << ((x86_REGS_value["eflags"] >> flagbit.at(#FLAG)) & 0x1) << ")" << "\t";
 
 void prettyDump() {
   // gpr
@@ -61,7 +70,7 @@ void prettyDump() {
   std::cout << std::endl;
   DUMPSEGS(cs); DUMPSEGS(ss); DUMPSEGS(ds); DUMPSEGS(es); DUMPSEGS(fs); DUMPSEGS(gs);
   std::cout << std::endl;
-  DUMPREGS(eflags)
+  DUMPREGS(eflags); DUMPFLAGS(CF); DUMPFLAGS(PF); DUMPFLAGS(AF); DUMPFLAGS(ZF); DUMPFLAGS(IF); DUMPFLAGS(DF); DUMPFLAGS(OF);
   std::cout << std::endl;
 }
 
@@ -106,10 +115,13 @@ UnicornWrap::UnicornWrap(uc_arch arch, uc_mode mode, uint64_t start, size_t size
     uc_close(this->uc);
     throw std::runtime_error("ERROR: failed on memory map, quit");
   }
+  uc_reg_write(this->uc, x86_REGS.at("eip"), &this->mem_start);
   uint32_t stackptr = this->mem_start + (mem_size >> 1);  
   uc_reg_write(this->uc, x86_REGS.at("esp"), &stackptr);
   uint32_t baseptr = this->mem_start + (mem_size >> 3);  
-  uc_reg_write(this->uc, x86_REGS.at("ebp"), &stackptr);
+  uc_reg_write(this->uc, x86_REGS.at("ebp"), &baseptr);
+  uint32_t flaginit = 0x2;
+  uc_reg_write(this->uc, x86_REGS.at("eflags"), &flaginit);
   this->DumpReg();
 }
 
