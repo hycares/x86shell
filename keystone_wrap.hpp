@@ -77,7 +77,6 @@ std::tuple<unsigned char*, size_t, size_t> KeystoneWrap::ASM(const char* code) {
 }
 
 std::tuple<unsigned char*, size_t, size_t> KeystoneWrap::ASM(std::string code) {
-  std::cout << "ASM: " << code << std::endl;
   return this->ASM(code.c_str());
 }
 }

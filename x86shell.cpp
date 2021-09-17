@@ -25,6 +25,7 @@ void initcmd() {
     std::cout << "quit - q" << "\t exit program." << std::endl;
     std::cout << "help - h" << "\t show help message." << std::endl;
     std::cout << "dump - d" << "\t dump register value." << std::endl;
+    std::cout << "stack   " << "\t dump stack" << std::endl;
   };
   cmdtool["help"] = helpfunc;
   cmdtool["h"] = helpfunc;
@@ -55,6 +56,8 @@ int main(int argc, char const *argv[])
       completions.push_back("adc");
     } else if (editBuffer[0] == 'd') {
       completions.push_back("dump");
+    } else if (editBuffer[0] == 's') {
+      completions.push_back("stack");
     }
   });
 
@@ -62,6 +65,11 @@ int main(int argc, char const *argv[])
   kw.SetOption(KS_OPT_SYNTAX, KS_OPT_SYNTAX_ATT);
   
   unicorn::UnicornWrap uc;
+
+  auto stackdump = [&]() {
+    uc.DumpStack();
+  };
+  cmdtool["stack"] = stackdump;
 
   std::string input;
   while (true) {
@@ -82,7 +90,7 @@ int main(int argc, char const *argv[])
     }
 
     auto tp = kw.ASM(input);
-    output(tp);
+    // output(tp);
     if (uc.Emulate(tp)) {
       unicorn::prettyDump();
     } else {

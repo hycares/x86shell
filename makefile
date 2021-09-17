@@ -1,28 +1,17 @@
 CC = g++
 
-KEYSTONE_LDFLAGS = -lkeystone -lstdc++ -lm
-UNICORN_LDFLAGS = -lm -lunicorn -lpthread
-
 STDCPP = -std=c++1z
 LDFLAGS = -lkeystone -lunicorn -lm -lpthread
-# src = $(wildcard ./*.cpp)
 
-target = asmshell
+SRC = $(wildcard ./*.cpp)
 
-keystonetarget = keytest
-unicorntarget = unitest
+target = x86shell
 
 all:
-	$(CC) -o $(target) asmshell.cpp $(LDFLAGS) $(STDCPP)
+	$(CC) -o $(target) $(SRC) $(LDFLAGS) $(STDCPP)
 
 debug:
-	$(CC) -o $(target) asmshell.cpp $(LDFLAGS) $(STDCPP) -g
-
-keystone:
-	$(CC) -o $(keystonetarget) keystone_wrap_test.cpp ${KEYSTONE_LDFLAGS} $(STDCPP)
-
-unicorn:
-	$(CC) -o $(unicorntarget) unicorn_wrap_test.cpp $(UNICORN_LDFLAGS) $(STDCPP)
+	$(CC) -o $(target) $(SRC) $(LDFLAGS) $(STDCPP) -g
 
 clean:
 	rm -rf *.o $(target) 

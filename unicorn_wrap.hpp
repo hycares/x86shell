@@ -94,6 +94,7 @@ public:
 
   std::string Error();
   void DumpReg();
+  void DumpStack();
   bool WriteReg(std::string, uint32_t);
   bool WriteReg(uc_x86_reg, uint32_t);
   uint32_t ReadReg(std::string);
@@ -143,6 +144,33 @@ std::string UnicornWrap::Error() {
 void UnicornWrap::DumpReg() {
   for (auto& [key, v] : x86_REGS) {
     uc_reg_read(this->uc, v, &(x86_REGS_value[key]));
+  }
+}
+
+void UnicornWrap::DumpStack() {
+  this->sp = this->ReadReg("esp");
+  unsigned char stackmem[80];
+  this->err = uc_mem_read(this->uc, this->sp - 32, stackmem, 80);
+  if (this->err != UC_ERR_OK) return;
+  // print stack
+  for (int i=0; i<5; i++) {
+    std::cout << "0x" << std::setw(8) << std::setfill('0') << std::hex << this->sp - 32 + (i * 16) << ": ";
+    for (int j=0; j<4; j++) {
+      for (int k=0; k<4; k++) {
+        std::cout << std::setw(2) << std::setfill('0') << std::hex << (int)stackmem[i*16+j*4+k];
+      }
+      std::cout << " ";
+    }
+    std::cout << " |";
+    for (int c=0; c<16; c++) {
+      auto chr = stackmem[i*16 + c];
+      if (chr >= 0x20 && chr <= 0x7E) {
+        std::cout << chr;
+      } else {
+        std::cout << ".";
+      }
+    }
+    std::cout << "|" << std::endl;
   }
 }
 
