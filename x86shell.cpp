@@ -3,6 +3,7 @@
 #include "linenoise.hpp"
 
 #include <functional>
+#include <fstream>
 
 using std::function;
 
@@ -24,6 +25,7 @@ void initcmd() {
     std::cout << "command" << std::endl;
     std::cout << "quit - q" << "\t exit program." << std::endl;
     std::cout << "help - h" << "\t show help message." << std::endl;
+    std::cout << "load - l" << "\t load script." << std::endl;
     std::cout << "dump - d" << "\t dump register value." << std::endl;
     std::cout << "stack   " << "\t dump stack" << std::endl;
   };
@@ -71,6 +73,14 @@ int main(int argc, char const *argv[])
   };
   cmdtool["stack"] = stackdump;
 
+  auto eval = [&](std::string in) {
+    auto tp = kw.ASM(in);
+    // output(tp);
+    if (!uc.Emulate(tp)) {
+      std::cout << uc.Error() << std::endl;
+    }
+  };
+
   std::string input;
   while (true) {
     auto quit = linenoise::Readline("\033[33mx86\x1b[0m> ", input);
@@ -89,10 +99,15 @@ int main(int argc, char const *argv[])
       continue;
     }
 
-    auto tp = kw.ASM(input);
-    // output(tp);
-    if (!uc.Emulate(tp)) {
-      std::cout << uc.Error() << std::endl;
+    if (input.find("load") != std::string::npos || input.find("l") != std::string::npos) {
+      auto filename = input.substr(input.find(" ") + 1);
+      auto file = std::ifstream(filename, std::ios_base::in);
+      while (std::getline(file, input)) {
+        eval(input);
+      }
+      file.close();
+    } else {
+      eval(input);
     }
   }
   
