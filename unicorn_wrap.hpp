@@ -35,8 +35,8 @@ std::map<std::string, uint32_t> x86_REGS_value {
 
 const std::map<std::string, int> flagbit {
   {"CF", 0}, {"PF", 2}, {"AF", 4},
-  {"ZF", 6}, {"IF", 9}, {"DF", 10},
-  {"OF", 11}
+  {"ZF", 6}, {"SF", 7}, {"IF", 9}, 
+  {"DF", 10}, {"OF", 11}
 };
 
 #define DUMPREGS(NAME) \
@@ -58,7 +58,7 @@ void prettyDump() {
   std::cout << std::endl;
   DUMPSEGS(cs); DUMPSEGS(ss); DUMPSEGS(ds); DUMPSEGS(es); DUMPSEGS(fs); DUMPSEGS(gs);
   std::cout << std::endl;
-  DUMPREGS(eflags); DUMPFLAGS(CF); DUMPFLAGS(PF); DUMPFLAGS(AF); DUMPFLAGS(ZF); DUMPFLAGS(IF); DUMPFLAGS(DF); DUMPFLAGS(OF);
+  DUMPREGS(eflags); DUMPFLAGS(CF); DUMPFLAGS(PF); DUMPFLAGS(AF); DUMPFLAGS(ZF); DUMPFLAGS(SF); DUMPFLAGS(DF); DUMPFLAGS(OF);
   std::cout << std::endl;
 }
 
